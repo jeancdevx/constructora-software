@@ -42,5 +42,3 @@ next-env.d.ts
 
 # husky
 .husky/
-# clerk configuration (can include secrets)
-/.clerk/
