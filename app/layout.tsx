@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 
-import './globals.css'
+import { esES } from '@clerk/localizations'
+import { ClerkProvider } from '@clerk/nextjs'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin']
-})
+import { Toaster } from '@/components/ui/sonner'
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin']
+import '@/styles/globals.css'
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  variable: '--font-noto-sans',
+  display: 'swap',
+  weight: ['400', '500', '700', '900']
 })
 
 export const metadata: Metadata = {
@@ -24,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider localization={esES}>
+      <html lang='es' suppressHydrationWarning>
+        <body className={`${nunito.className} antialiased`}>
+          {children}
+
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
