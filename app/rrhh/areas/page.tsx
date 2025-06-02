@@ -4,7 +4,6 @@ import { Edit } from 'lucide-react'
 
 import { getAreas } from '@/db/queries'
 
-import DeleteAreaButton from '@/components/form/DeleteAreaButton'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -57,14 +56,11 @@ export default async function AreasPage() {
                     {new Date(area.updatedAt).toLocaleDateString('es-ES')}
                   </TableCell>
                   <TableCell className='text-right'>
-                    <div className='flex items-center justify-end gap-2'>
-                      <Button asChild variant='ghost' size='sm'>
-                        <Link href={`/rrhh/areas/${area.id}`}>
-                          <Edit className='h-4 w-4' />
-                        </Link>
-                      </Button>
-                      <DeleteAreaButton areaId={area.id} areaName={area.name} />
-                    </div>
+                    <Button asChild variant='ghost' size='sm'>
+                      <Link href={`/rrhh/areas/${area.id}`}>
+                        <Edit className='h-4 w-4' />
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

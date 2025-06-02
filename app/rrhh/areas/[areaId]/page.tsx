@@ -6,13 +6,12 @@ import AreaForm from '@/components/form/AreaForm'
 import FormLayout from '@/components/layout/FormLayout'
 
 interface RRHHAreaIdPageProps {
-  params: Promise<{
+  params: {
     areaId: string
-  }>
+  }
 }
 
-const RRHHAreaIdPage = async ({ params }: RRHHAreaIdPageProps) => {
-  const { areaId } = await params
+const RRHHAreaIdPage = async ({ params: { areaId } }: RRHHAreaIdPageProps) => {
   const isCreating = areaId === 'create'
 
   let area = null
@@ -35,18 +34,7 @@ const RRHHAreaIdPage = async ({ params }: RRHHAreaIdPageProps) => {
   return (
     <FormLayout breadcrumbs={breadcrumbs}>
       <div className='space-y-6'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>
-            {isCreating ? 'Crear Nueva Área' : 'Editar Área'}
-          </h1>
-          <p className='mt-2 text-muted-foreground'>
-            {isCreating
-              ? 'Complete el formulario para crear una nueva área de trabajo.'
-              : 'Modifique los datos del área según sea necesario.'}
-          </p>
-        </div>
-
-        <AreaForm initialData={area} />
+        <AreaForm initialData={area} isCreating={isCreating} />
       </div>
     </FormLayout>
   )
