@@ -43,15 +43,12 @@ export async function createArea(formData: FormData): Promise<ActionResult> {
       }
     }
 
-    // Extraer datos del FormData
     const rawData = {
       name: formData.get('name') as string
     }
 
-    // Validar datos
     const validatedData = createAreaSchema.parse(rawData)
 
-    // Verificar que no exista un área con el mismo nombre
     const existingArea = await db.query.areas.findFirst({
       where: eq(areas.name, validatedData.name)
     })
@@ -66,7 +63,6 @@ export async function createArea(formData: FormData): Promise<ActionResult> {
       }
     }
 
-    // Crear el área
     await db
       .insert(areas)
       .values({
@@ -74,7 +70,6 @@ export async function createArea(formData: FormData): Promise<ActionResult> {
       })
       .returning()
 
-    // Revalidar las páginas que usan áreas
     revalidatePath('/rrhh/areas')
     revalidatePath('/rrhh')
 
@@ -118,16 +113,13 @@ export async function updateArea(formData: FormData): Promise<ActionResult> {
       }
     }
 
-    // Extraer datos del FormData
     const rawData = {
       id: formData.get('id') as string,
       name: formData.get('name') as string
     }
 
-    // Validar datos
     const validatedData = updateAreaSchema.parse(rawData)
 
-    // Verificar que el área existe
     const existingArea = await db.query.areas.findFirst({
       where: eq(areas.id, validatedData.id)
     })
@@ -139,7 +131,6 @@ export async function updateArea(formData: FormData): Promise<ActionResult> {
       }
     }
 
-    // Verificar que no exista otra área con el mismo nombre
     const duplicateArea = await db.query.areas.findFirst({
       where: eq(areas.name, validatedData.name)
     })
@@ -154,7 +145,6 @@ export async function updateArea(formData: FormData): Promise<ActionResult> {
       }
     }
 
-    // Actualizar el área
     await db
       .update(areas)
       .set({
@@ -163,7 +153,6 @@ export async function updateArea(formData: FormData): Promise<ActionResult> {
       })
       .where(eq(areas.id, validatedData.id))
 
-    // Revalidar las páginas que usan áreas
     revalidatePath('/rrhh/areas')
     revalidatePath('/rrhh')
     revalidatePath(`/rrhh/areas/${validatedData.id}`)
@@ -208,11 +197,9 @@ export async function deleteArea(areaId: string): Promise<ActionResult> {
       }
     }
 
-    // Validar que el ID sea un UUID válido
     const idSchema = z.string().uuid('ID de área inválido')
     const validatedId = idSchema.parse(areaId)
 
-    // Verificar que el área existe
     const existingArea = await db.query.areas.findFirst({
       where: eq(areas.id, validatedId)
     })
@@ -224,7 +211,6 @@ export async function deleteArea(areaId: string): Promise<ActionResult> {
       }
     }
 
-    // Verificar que no tenga ofertas laborales asociadas
     const relatedJobOffers = await db.query.jobOffers.findMany({
       where: (jobOffers, { eq }) => eq(jobOffers.areaId, validatedId)
     })
@@ -237,10 +223,8 @@ export async function deleteArea(areaId: string): Promise<ActionResult> {
       }
     }
 
-    // Eliminar el área
     await db.delete(areas).where(eq(areas.id, validatedId))
 
-    // Revalidar las páginas que usan áreas
     revalidatePath('/rrhh/areas')
     revalidatePath('/rrhh')
 
